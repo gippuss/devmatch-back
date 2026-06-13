@@ -15,5 +15,4 @@ RUN apk add --no-cache ca-certificates
 COPY --from=builder /build/devmatch-back ./devmatch-back
 COPY migrations ./migrations
 
-EXPOSE 8080
 CMD ["./devmatch-back"]
