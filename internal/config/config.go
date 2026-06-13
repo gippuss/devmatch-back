@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -23,6 +24,7 @@ type Config struct {
 	AuthRefreshSecret       string
 	AuthAccessTTL           time.Duration
 	AuthRefreshTTL          time.Duration
+	CORSOrigins             []string
 }
 
 func Load() (*Config, error) {
@@ -42,6 +44,7 @@ func Load() (*Config, error) {
 		AuthRefreshSecret:       os.Getenv("AUTH_REFRESH_SECRET"),
 		AuthAccessTTL:           getDuration("AUTH_ACCESS_TTL", 15*time.Minute),
 		AuthRefreshTTL:          getDuration("AUTH_REFRESH_TTL", 720*time.Hour),
+		CORSOrigins:             getStringSlice("APP_CORS_ORIGINS", []string{"http://localhost:3000"}),
 	}
 
 	if cfg.DatabaseURL == "" {
@@ -104,4 +107,23 @@ func getBool(name string, fallback bool) bool {
 	}
 
 	return value
+}
+
+func getStringSlice(name string, fallback []string) []string {
+	raw, ok := os.LookupEnv(name)
+	if !ok || raw == "" {
+		return fallback
+	}
+
+	parts := strings.Split(raw, ",")
+	result := make([]string, 0, len(parts))
+	for _, p := range parts {
+		if trimmed := strings.TrimSpace(p); trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+	if len(result) == 0 {
+		return fallback
+	}
+	return result
 }

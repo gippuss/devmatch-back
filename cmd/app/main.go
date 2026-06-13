@@ -98,6 +98,7 @@ func main() {
 		applicationService,
 		dictionaryService,
 		dbPool,
+		cfg.CORSOrigins,
 	)
 
 	srv := transport.NewServer(cfg, router)

@@ -23,13 +23,14 @@ func NewRouter(
 	applicationService *service.ApplicationService,
 	dictionaryService *service.DictionaryService,
 	dbPool *pgxpool.Pool,
+	corsOrigins []string,
 ) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 
 	router := gin.New()
 	router.Use(
 		cors.New(cors.Config{
-			AllowOrigins:     []string{"http://localhost:3000"},
+			AllowOrigins:     corsOrigins,
 			AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 			AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 			ExposeHeaders:    []string{"Content-Length"},
