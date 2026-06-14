@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - ":5432"
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -33,14 +33,10 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - ":8080"
+      - "8080:8080"
     volumes:
       - uploads_data:/app/uploads
 
 volumes:
   postgres_data:
   uploads_data:
-
-networks:
-  devmatch-net:
-    external: true
